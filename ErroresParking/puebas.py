@@ -30,27 +30,58 @@ def prueba_ejemplo():
 
 def prueba_1_minimo_un_minuto():
     """Salir a los 0 segundos cuesta 1 minuto (0,05 euros)."""
-    raise NotImplementedError("Escribe esta prueba")
+    p = Parking()
+    p.entrada("1234ABC", ahora=0)
+    minutos, importe = p.salida("1234ABC", ahora=0)
+    assert minutos == 1, f"minutos: esperado 1, obtenido {minutos}"
+    assert round(float(importe), 2) == 0.05, f"importe: {importe}"
 
 
 def prueba_2_redondeo_hacia_arriba():
     """A los 60 segundos: 1 minuto. A los 60,1 segundos: 2 minutos."""
-    raise NotImplementedError("Escribe esta prueba")
+    p = Parking()
+    p.entrada("AAA", ahora=0)
+    minutos, _ = p.salida("AAA", ahora=60)
+    assert minutos == 1, f"a 60 s esperado 1, obtenido {minutos}"
+
+    p.entrada("BBB", ahora=0)
+    minutos, _ = p.salida("BBB", ahora=60.1)
+    assert minutos == 2, f"a 60,1 s esperado 2, obtenido {minutos}"
 
 
 def prueba_3_parking_lleno():
     """Con 20 coches dentro, el 21.o recibe un error de parking lleno."""
-    raise NotImplementedError("Escribe esta prueba")
+    p = Parking()
+    for i in range(20):
+        p.entrada("COCHE" + str(i), ahora=0)
+    try:
+        p.entrada("EXTRA", ahora=0)
+        assert False, "deberia haber dado error de parking lleno"
+    except ParkingError:
+        pass
 
 
 def prueba_4_plaza_se_libera():
     """Cuando un coche sale, su plaza queda libre y la usa el siguiente."""
-    raise NotImplementedError("Escribe esta prueba")
+    p = Parking()
+    p.entrada("AAA", ahora=0)   # plaza 1
+    p.entrada("BBB", ahora=0)   # plaza 2
+    p.salida("AAA", ahora=60)   # se libera la plaza 1
+    plaza = p.entrada("CCC", ahora=60)
+    assert plaza == 1, f"esperado plaza 1, obtenido {plaza}"
 
 
 def prueba_5_recaudacion():
     """Tras varias salidas, la recaudacion es la suma de todos los importes."""
-    raise NotImplementedError("Escribe esta prueba")
+    p = Parking()
+    p.entrada("AAA", ahora=0)
+    p.entrada("BBB", ahora=0)
+    p.entrada("CCC", ahora=0)
+    _, i1 = p.salida("AAA", ahora=60)
+    _, i2 = p.salida("BBB", ahora=61)
+    _, i3 = p.salida("CCC", ahora=180)
+    esperado = round(float(i1 + i2 + i3), 2)
+    assert round(float(p.recaudacion), 2) == esperado, f"recaudacion {p.recaudacion}, esperado {esperado}"
 
 
 PRUEBAS = [

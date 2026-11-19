@@ -1,4 +1,4 @@
-from parking import Parking
+from parking import Parking, ParkingError
 
 
 def mostrar_menu():
@@ -13,7 +13,7 @@ def mostrar_menu():
 def main():
     parking = Parking()
     opcion = ""
-    while opcion != "5":
+    while opcion != "4":
         mostrar_menu()
         opcion = input("Elige una opcion: ")
         if opcion == "1":
@@ -28,7 +28,7 @@ def main():
             try:
                 minutos, importe = parking.salida(matricula)
                 print("Tiempo: " + str(minutos) + " minutos")
-                print("Importe a pagar: " + str(importe) + " euros")
+                print(f"Importe a pagar: {importe:.2f} euros")
             except ParkingError as e:
                 print("Error: " + str(e))
         elif opcion == "3":

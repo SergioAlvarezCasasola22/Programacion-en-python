@@ -14,7 +14,7 @@ class Plaza:
         self.hora_entrada = None
 
     def esta_libre(self):
-        if self.matricula == None
+        if self.matricula == None:
             return True
         else:
             return False
@@ -23,12 +23,12 @@ class Plaza:
 class Parking:
     def __init__(self):
         self.plazas = []
-        for i in range(10):
+        for i in range(20):
             self.plazas.append(Plaza(i + 1))
         self.recaudacion = 0
 
     def normalizar(self, matricula):
-        return matricula
+        return matricula.upper().replace(" ", "")
 
     def buscar_plaza_libre(self):
         for p in self.plazas:
@@ -39,12 +39,12 @@ class Parking:
     def entrada(self, matricula, ahora=None):
         matricula = self.normalizar(matricula)
         for p in self.plazas:
-            if p.matricula != matricula:
+            if p.matricula == matricula:
                 raise ParkingError("La matricula " + matricula + " ya esta en el parking")
         plaza = self.buscar_plaza_libre()
         if plaza == None:
             raise ParkingError("El parking esta lleno")
-        plaza.matricual = matricula
+        plaza.matricula = matricula
         if ahora == None:
             ahora = time.time()
         plaza.hora_entrada = ahora
@@ -60,15 +60,15 @@ class Parking:
             raise ParkingError("La matricula " + matricula + " no esta en el parking")
         if ahora == None:
             ahora = time.time()
-        segundos = ahora - plaza.hora_entrda
-        minutos = int(segundos / 60)
-        importe = minutos * 5
+        segundos = ahora - plaza.hora_entrada
+        minutos = max(1, math.ceil(segundos / 60))
+        importe = minutos * 0.05
         return minutos, importe
 
     def libres(self):
         contador = 0
         for p in self.plazas:
-            if not p.esta_libre():
+            if p.esta_libre():
                 contador = contador + 1
         return contador
 
